@@ -17,5 +17,17 @@ Gem::Specification.new do |s|
   s.test_files = Dir['spec/**/*']
 
   s.add_dependency 'rails', '>= 3.2', '< 5'
-  s.add_dependency 'cloudinary', '~> 1.1.0'
+  s.add_dependency 'coffee-script'
+  s.add_dependency 'cloudinary', '~> 1.1'
+
+  s.add_development_dependency 'sqlite3'
+  s.add_development_dependency 'rspec-rails'
+  s.add_development_dependency 'valid_attribute'
+  s.add_development_dependency 'capybara'
+  s.add_development_dependency 'capybara-webkit'
+  s.add_development_dependency 'factory_girl_rails'
+  s.add_development_dependency 'launchy'
+  s.add_development_dependency 'database_cleaner'
+  s.add_development_dependency 'rb-fsevent', '~> 0.9.1'
+  s.add_development_dependency 'guard-rspec'
 end
