@@ -26,3 +26,5 @@ end
 
 # To use debugger
 # gem 'debugger'
+
+gem "dox-style", "~> 1.0.8", group: :development, source: "https://gem.fury.io/doximity/"
