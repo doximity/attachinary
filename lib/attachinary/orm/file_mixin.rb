@@ -32,19 +32,19 @@ module Attachinary
       format = options.delete(:format)
       Cloudinary::Utils.cloudinary_url(path(format), options.reverse_merge(:resource_type => resource_type))
     end
-    
+
   protected
     def keep_remote?
       Cloudinary.config.attachinary_keep_remote == true
     end
-    
+
   private
     def destroy_file
-      Cloudinary::Uploader.destroy(public_id) if public_id && !keep_remote?
+      Cloudinary::Uploader.destroy(public_id, resource_type: resource_type) if public_id && !keep_remote?
     end
 
     def remove_temporary_tag
-      Cloudinary::Uploader.remove_tag(Attachinary::TMPTAG, [public_id]) if public_id
+      Cloudinary::Uploader.remove_tag(Attachinary::TMPTAG, [public_id], resource_type: resource_type) if public_id
     end
 
   end
