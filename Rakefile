@@ -30,6 +30,8 @@ require "rspec/core/rake_task"
 RSpec::Core::RakeTask.new(:spec)
 
 task :default do
-  system "cd spec/dummy && rails db:migrate"
+  Dir.chdir("spec/dummy") do
+    sh "rails db:migrate"
+  end
   Rake::Task[:spec].invoke
 end
