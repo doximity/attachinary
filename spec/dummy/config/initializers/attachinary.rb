@@ -1,1 +1,1 @@
-require "attachinary/orm/#{ATTACHINARY_ORM}"
+require "attachinary/orm/active_record"

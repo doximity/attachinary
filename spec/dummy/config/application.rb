@@ -2,13 +2,7 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 require "sprockets/railtie"
-
-Bundler.require :default, ATTACHINARY_ORM
-
-begin
-  require "#{ATTACHINARY_ORM}/railtie"
-rescue LoadError
-end
+require "active_record/railtie"
 
 require "attachinary"
 
@@ -21,7 +15,7 @@ module Dummy
     # Custom directories with classes and modules you want to be autoloadable.
     # config.autoload_paths += %W(#{config.root}/extras)
     config.autoload_paths.reject!{ |p| p =~ /\/app\/(\w+)$/ && !%w(controllers helpers views).include?($1) }
-    config.autoload_paths += [ "#{config.root}/app/#{ATTACHINARY_ORM}" ]
+    config.autoload_paths += [ "#{config.root}/app/active_record" ]
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
