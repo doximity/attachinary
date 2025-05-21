@@ -325,6 +325,8 @@ GEM
       rspec-mocks (~> 3.13)
       rspec-support (~> 3.13)
     rspec-support (3.13.3)
+    rspec_junit_formatter (0.6.0)
+      rspec-core (>= 2, < 4, != 2.12.0)
     rubyzip (2.4.1)
     securerandom (0.4.1)
     selenium-webdriver (4.32.0)
@@ -393,6 +395,7 @@ DEPENDENCIES
   puma
   rb-fsevent (~> 0.9.1)
   rspec-rails
+  rspec_junit_formatter
   selenium-webdriver
   simple_form
   sprockets-rails
