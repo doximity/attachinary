@@ -29,4 +29,7 @@ require "rspec/core/rake_task"
 
 RSpec::Core::RakeTask.new(:spec)
 
-task default: :spec
+task :default do
+  system "cd spec/dummy && rails db:migrate"
+  Rake::Task[:spec].invoke
+end

@@ -3,7 +3,7 @@ require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 require "sprockets/railtie"
 require "active_record/railtie"
-
+Bundler.require :default
 require "attachinary"
 
 module Dummy
