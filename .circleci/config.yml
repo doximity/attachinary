@@ -534,7 +534,9 @@ workflows:
     jobs:
     - circle_ci_job:
         executor: ruby
-        context: nexus_readonly
+        context:
+          - nexus_readonly
+          - cloudinary
         dependencies:
         - bundle_install
         post-actions: &1
@@ -563,7 +565,9 @@ workflows:
         - browser-tools/install-chrome
     - ruby_mvt_job:
         executor: ruby
-        context: nexus_readonly
+        context:
+          - nexus_readonly
+          - cloudinary
         post-actions: *1
         actions: *2
         parallelism: 1
