@@ -272,6 +272,12 @@ commands:
         default: 0
     steps:
     - run:
+        name: Migrate Dummy
+        command: |
+          cd spec/dummy
+          bundle install
+          bundle exec rails db:migrate
+    - run:
         name: Run RSpec Tests
         environment:
           OUT_PATH: tmp/test-results
