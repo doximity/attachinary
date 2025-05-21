@@ -68,7 +68,7 @@ describe 'Notes', type: :feature do
         end
         click_button 'Create Note'
 
-        expect(current_path).to eq notes_path
+        expect(page).to have_current_path notes_path
         expect(page).to have_content 'My Note'
         expect(page).to have_css 'img'
       end

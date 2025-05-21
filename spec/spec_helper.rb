@@ -17,7 +17,23 @@ require "#{SPEC_ROOT}/factories"
 
 require 'database_cleaner'
 
-Capybara.javascript_driver = :selenium
+require "selenium-webdriver"
+
+Capybara.register_driver :chrome do |app|
+  options = ::Selenium::WebDriver::Options.chrome(
+    args: %w[
+        --headless=new
+        --no-sandbox
+        --window-size=1600,1600
+      ]
+  )
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome,
+    options: options
+  )
+end
+Capybara.javascript_driver = :chrome
 
 require "#{SPEC_ROOT}/support/request_helpers"
 
@@ -28,10 +44,6 @@ RSpec.configure do |config|
 
   config.include FactoryBot::Syntax::Methods
   config.include RequestHelpers, type: :feature
-
-  config.before(:each, type: :feature) do
-    # include Rails.application.url_helpers
-  end
 
   config.before(:suite) do
     DatabaseCleaner.strategy = :truncation
