@@ -36,6 +36,10 @@ Capybara.register_driver :chrome do |app|
 end
 Capybara.javascript_driver = :chrome
 
+Capybara::Screenshot.register_driver :chrome do |driver, path|
+  driver.browser.save_screenshot(path)
+end
+
 require "#{SPEC_ROOT}/support/request_helpers"
 
 RSpec.configure do |config|
