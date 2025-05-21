@@ -47,7 +47,7 @@ module Attachinary
           # end
           define_method :"#{options[:scope]}_url=" do |url, upload_options = {}|
             upload_options.merge! resource_type: 'auto'
-            send(:"#{options[:scope]}=", Cloudinary::Uploader.upload(url, upload_options))
+            send(:"#{options[:scope]}=", Cloudinary::Uploader.upload(url, **upload_options))
           end
 
         else
@@ -56,7 +56,7 @@ module Attachinary
           # end
           define_method :"#{options[:singular]}_urls=" do |urls, upload_options = {}|
             upload_options.merge! resource_type: 'auto'
-            send(:"#{options[:scope]}=", urls.map { |url| Cloudinary::Uploader.upload(url, upload_options) })
+            send(:"#{options[:scope]}=", urls.map { |url| Cloudinary::Uploader.upload(url, **upload_options) })
           end
         end
 

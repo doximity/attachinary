@@ -1,6 +1,7 @@
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
+require "sprockets/railtie"
 
 Bundler.require :default, ATTACHINARY_ORM
 
@@ -52,10 +53,6 @@ module Dummy
     # This is necessary if your schema can't be completely dumped by the schema dumper,
     # like if you have constraints or database-specific column types
     # config.active_record.schema_format = :sql
-    
-    if Rails::VERSION::MAJOR == 3
-      config.active_record.whitelist_attributes = true
-    end
 
     # Enable the asset pipeline
     config.assets.enabled = true

@@ -11,3 +11,5 @@ bin/
 
 .rspec
 config/cloudinary.yml
+
+.env

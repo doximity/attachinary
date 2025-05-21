@@ -1,7 +1,7 @@
-require 'rails_helper'
+require 'spec_helper'
 
-describe 'Notes' do
-  Capybara.default_wait_time = 15
+describe 'Notes', type: :feature do
+  Capybara.default_max_wait_time = 15
 
   describe 'Creating new note' do
 
