@@ -11,6 +11,7 @@ SPEC_ROOT = File.dirname(__FILE__)
 
 require 'valid_attribute'
 require 'capybara/rspec'
+require 'capybara-screenshot/rspec'
 
 require 'factory_bot'
 require "#{SPEC_ROOT}/factories"
