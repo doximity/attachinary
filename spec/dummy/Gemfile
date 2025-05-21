@@ -13,7 +13,8 @@ gem 'jbuilder', '~> 2.0'
 
 gem 'sprockets-rails'
 
+gem 'mini_racer'
+
 gem 'cloudinary', '~> 2.3'
 gem 'attachinary', :path => '../..'
 gem 'simple_form'
-
