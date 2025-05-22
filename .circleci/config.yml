@@ -272,12 +272,6 @@ commands:
         default: 0
     steps:
     - run:
-        name: Migrate Dummy
-        command: |
-          cd spec/dummy
-          bundle install
-          bundle exec rails db:migrate RAILS_ENV=test
-    - run:
         name: Run RSpec Tests
         environment:
           OUT_PATH: tmp/test-results
@@ -470,7 +464,7 @@ jobs:
     - steps: "<< parameters.actions >>"
     - steps: "<< parameters.post-actions >>"
     - ci-utils/quietly_store_artifacts
-  ruby_mvt_job:
+  build:
     parameters:
       executor:
         type: string
@@ -528,18 +522,20 @@ jobs:
     - steps: "<< parameters.actions >>"
     - steps: "<< parameters.post-actions >>"
     - ci-utils/quietly_store_artifacts
+  required_tests_pass:
+    executor: base
+    steps:
+    - run:
+        name: Required Tests are Passing
+        command: echo "Required Tests are Passing"
 
 workflows:
   main:
     jobs:
-    - circle_ci_job:
+    - build:
         executor: ruby
-        context:
-          - nexus_readonly
-          - cloudinary
-        dependencies:
-        - bundle_install
-        post-actions: &1
+        context: nexus_readonly
+        post-actions:
         - save_cache:
             key: cov-cache-v1-{{ .Environment.CIRCLE_JOB }}-{{ .Branch }}-{{ .Revision
               }}
@@ -553,36 +549,27 @@ workflows:
               || true
         - store_artifacts:
             path: tmp/deprecations
-        actions: &2
+        actions:
         - run_rspec_tests:
             test_pattern: "{$(ls -d spec/**/ | sed -E 's/(spec\\/|factories|support|\\/|,$)//g'
               | sort | uniq | tr '\\n' ',' | sed 's/,\\{2,\\}/,/g')}"
             test_files: $(circleci tests glob "spec/$TEST_PATTERN/**/*_spec.rb" |
               circleci tests split --split-by=timings)
         parallelism: 1
-        name: build
-        pre-actions: &3
+        pre-actions:
         - browser-tools/install-chrome
-    - ruby_mvt_job:
-        executor: ruby
-        context:
-          - nexus_readonly
-          - cloudinary
-        post-actions: *1
-        actions: *2
-        parallelism: 1
-        pre-actions: *3
+        - run: cd spec/dummy
+        - run: bundle install
+        - run: bundle exec rails db:migrate RAILS_ENV=test
         matrix:
           parameters:
             ruby-version:
             - '3.2'
             - '3.3'
             - '3.4'
-        name: ruby_mvt_job-ruby-<< matrix.ruby-version >>
-        filters:
-          branches:
-            ignore:
-            - master
-            - main
-          tags:
-            ignore: "/.*/"
+        name: build-ruby-<< matrix.ruby-version >>
+    - required_tests_pass:
+        requires:
+        - build-ruby-3.2
+        - build-ruby-3.3
+        - build-ruby-3.4
