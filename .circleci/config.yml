@@ -14,7 +14,7 @@ executors:
     parameters:
       ruby-version:
         type: string
-        default: '3.2'
+        default: 3.3.8
     resource_class: small
     docker:
     - image: cimg/ruby:<< parameters.ruby-version >>
@@ -433,18 +433,15 @@ workflows:
         parallelism: 1
         pre-actions:
         - browser-tools/install-chrome
-        - run: cd spec/dummy
-        - run: bundle install
-        - run: bundle exec rails db:migrate RAILS_ENV=test
+        - run: |
+            cd spec/dummy
+            bundle install
+            bundle exec rails db:migrate RAILS_ENV=test
         matrix:
           parameters:
             ruby-version:
-            - '3.2'
             - '3.3'
-            - '3.4'
-        name: run_tests_ruby-ruby-<< matrix.ruby-version >>
+        name: build-ruby-<< matrix.ruby-version >>
     - required_tests_pass:
         requires:
-        - run_tests_ruby-ruby-3.2
-        - run_tests_ruby-ruby-3.3
-        - run_tests_ruby-ruby-3.4
+        - build-ruby-3.3
