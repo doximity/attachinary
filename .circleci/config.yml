@@ -48,7 +48,7 @@ commands:
 
           '
         type: string
-        default: ''
+        default: '3.2'
     steps:
     - run:
         name: Install Bundler specific version
@@ -433,8 +433,7 @@ workflows:
               circleci tests split --split-by=timings)
         parallelism: 1
         pre-actions:
-        - browser-tools/install:
-            browser: chrome
+        - browser-tools/install-chrome
         - run: cd spec/dummy
         - run: bundle install
         - run: RAILS_ENV=test bundle exec rails db:create db:migrate
