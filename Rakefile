@@ -27,6 +27,8 @@ Bundler::GemHelper.install_tasks
 
 require "rspec/core/rake_task"
 
+FileList["tasks/*.rake"].each { |task| load task }
+
 RSpec::Core::RakeTask.new(:spec)
 
 task :default do
