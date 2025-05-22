@@ -20,7 +20,6 @@ executors:
     - image: cimg/ruby:<< parameters.ruby-version >>
       environment:
         BUNDLE_VERSION: 2.6.8
-        RAILS_ENV: test
 
 commands:
   post_checkout_steps:
