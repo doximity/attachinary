@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.description = "Attachments handler for Rails that uses Cloudinary for storage. Forked from attachinary."
 
   s.files = (Dir["{app,config,db,lib,vendor}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md", "CHANGELOG.md"]).select do |f|
-    !f.start_with?("vendor/cache")
+    !f.start_with?("vendor/cache", "vendor/bundle")
   end
   s.test_files = Dir["spec/**/*"]
 
