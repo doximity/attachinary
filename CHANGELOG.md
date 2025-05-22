@@ -1,3 +1,6 @@
+= Version 2.0.0
+  * TODO
+
 = Version 1.3.0
   * Added support for Rails 4 (thanks @rochers)
   * Use resource type when building cloudinary urls
