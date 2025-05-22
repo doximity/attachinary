@@ -73,7 +73,7 @@ describe Note do
         image = StringIO.new("")
         file = build(:file)
         expected_id = file.public_id
-        expect(Cloudinary::Uploader).to receive(:upload).with(image, resource_type: 'auto').and_return(file.attributes)
+        expect(Cloudinary::Uploader).to receive(:upload).with(image, { resource_type: 'auto' }).and_return(file.attributes)
 
         subject.photo = image
         expect(subject.photo.public_id).to eq expected_id
@@ -86,7 +86,7 @@ describe Note do
       let(:json) { file.attributes.to_json }
 
       before do
-        expect(Cloudinary::Uploader).to receive(:upload).with(url, resource_type: 'auto').and_return(json)
+        expect(Cloudinary::Uploader).to receive(:upload).with(url, { resource_type: 'auto' }).and_return(json)
       end
 
       it 'uploads photo via url' do
@@ -141,7 +141,7 @@ describe Note do
         files_ids = files.map(&:public_id)
 
         files.each.with_index do |file, index|
-          expect(Cloudinary::Uploader).to receive(:upload).with(images[index], resource_type: 'auto').and_return(file.attributes)
+          expect(Cloudinary::Uploader).to receive(:upload).with(images[index], { resource_type: 'auto' }).and_return(file.attributes)
         end
 
         subject.images = images
@@ -157,7 +157,7 @@ describe Note do
       before do
         files_ids
         files.each.with_index do |file, index|
-          expect(Cloudinary::Uploader).to receive(:upload).with(urls[index], resource_type: 'auto').and_return(file.attributes)
+          expect(Cloudinary::Uploader).to receive(:upload).with(urls[index], { resource_type: 'auto' }).and_return(file.attributes)
         end
       end
 

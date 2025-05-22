@@ -15,6 +15,6 @@ gem 'sprockets-rails'
 
 gem 'mini_racer'
 
-gem 'cloudinary', '~> 2.3'
+gem 'cloudinary'
 gem 'attachinary', :path => '../..'
 gem 'simple_form'

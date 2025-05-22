@@ -253,7 +253,7 @@ PLATFORMS
 
 DEPENDENCIES
   attachinary!
-  cloudinary (~> 2.3)
+  cloudinary
   coffee-rails
   jbuilder
   jquery-rails
