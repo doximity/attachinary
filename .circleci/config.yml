@@ -502,7 +502,7 @@ workflows:
           <<: *master_only
       - gem/build:
           <<: *master_only
-          executor: ruby-2-6
+          executor: ruby
           name: gem-build
           requires:
             - build
@@ -513,7 +513,7 @@ workflows:
           <<: *pr_only
       - gem/build:
           <<: *pr_only
-          executor: ruby-2-6
+          executor: ruby
           name: gem-build
           requires:
             - build
@@ -537,7 +537,7 @@ workflows:
           <<: *version_tags_only
       - gem/build:
           <<: *version_tags_only
-          executor: ruby-2-6
+          executor: ruby
           name: gem-build
           requires:
             - build
