@@ -396,7 +396,7 @@ DEPENDENCIES
   attachinary!
   capybara
   capybara-screenshot
-  cloudinary (~> 2.3)
+  cloudinary
   coffee-rails
   database_cleaner
   dotenv
