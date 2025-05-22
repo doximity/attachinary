@@ -534,7 +534,9 @@ workflows:
     jobs:
     - build:
         executor: ruby
-        context: nexus_readonly
+        context:
+          - nexus_readonly
+          - cloudinary
         post-actions:
         - save_cache:
             key: cov-cache-v1-{{ .Environment.CIRCLE_JOB }}-{{ .Branch }}-{{ .Revision
