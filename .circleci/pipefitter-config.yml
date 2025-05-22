@@ -3,7 +3,7 @@
 # in this directory
 ruby-versions: ["supported-versions"]
 
-cache-dependencies: true
+# cache-dependencies: true
 
 pre-test-commands:
   - cd spec/dummy

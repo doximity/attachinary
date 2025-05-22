@@ -34,7 +34,7 @@ commands:
 
           '
         type: boolean
-        default: true
+        default: false
       cache-salt:
         description: |
           Salt to change the cache name, so we can use it with different version (i.e. Ruby versions).
