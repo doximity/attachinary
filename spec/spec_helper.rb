@@ -1,46 +1,54 @@
 # Configure Rails Envinronment
 ENV["RAILS_ENV"] = "test"
-ATTACHINARY_ORM ||= (ENV["ATTACHINARY_ORM"] || :active_record).to_sym
+require "dotenv"
+Dotenv.load(".env") if File.exist?(".env")
 
-# $:.unshift File.dirname(__FILE__)
-# require 'rspec/rails'
-# require "dummy/config/environment.rb"
-SPEC_ROOT = "#{::Rails.root}/.."
-require "#{SPEC_ROOT}/orm/#{ATTACHINARY_ORM}"
+require File.expand_path('../spec/dummy/config/environment.rb', __dir__)
+ENV['RAILS_ROOT'] ||= File.dirname(__FILE__) + '../../../spec/dummy'
+require 'rspec/rails'
+
+SPEC_ROOT = File.dirname(__FILE__)
 
 require 'valid_attribute'
 require 'capybara/rspec'
+require 'capybara-screenshot/rspec'
 
-require 'factory_girl'
+require 'factory_bot'
 require "#{SPEC_ROOT}/factories"
 
 require 'database_cleaner'
 
-require "capybara/webkit"
-Capybara.javascript_driver = :webkit
+require "selenium-webdriver"
 
-Capybara::Webkit.configure do |config|
-  config.allow_url("api.cloudinary.com")
-  config.allow_url("res.cloudinary.com")
+Capybara.register_driver :chrome do |app|
+  options = ::Selenium::WebDriver::Options.chrome(
+    args: %w[
+        --headless=new
+        --no-sandbox
+        --window-size=1600,1600
+      ]
+  )
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome,
+    options: options
+  )
+end
+Capybara.javascript_driver = :chrome
+
+Capybara.save_path = File.expand_path('../tmp/capybara', __dir__)
+Capybara::Screenshot.register_driver :chrome do |driver, path|
+  driver.browser.save_screenshot(path)
 end
 
-# ENGINE_RAILS_ROOT = File.join(File.dirname(__FILE__), '../')
-
-# Requires supporting ruby files with custom matchers and macros, etc,
-# in spec/support/ and its subdirectories.
-# Uncomment next line to load all support files, if you have more than one
-# Uncomment next line to load all support files, if you have more than one
-# Dir[File.join(ENGINE_RAILS_ROOT, "../../spec/support/**/*.rb")].each {|f| require f }
 require "#{SPEC_ROOT}/support/request_helpers"
 
 RSpec.configure do |config|
   config.color = true
-  config.treat_symbols_as_metadata_keys_with_true_values = true
   config.filter_run focus: true
   config.run_all_when_everything_filtered = true
 
-  config.use_transactional_fixtures = false
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
   config.include RequestHelpers, type: :feature
 
   config.before(:suite) do

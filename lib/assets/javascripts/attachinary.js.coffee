@@ -6,6 +6,7 @@
       disableWith: 'Uploading...'
       indicateProgress: true
       invalidFormatMessage: 'Invalid file format'
+      unknownErrorMessage: 'Error uploading file'
       template: """
         <ul>
           <% for(var i=0; i<files.length; i++){ %>
@@ -65,12 +66,19 @@
         sequentialUploads: true
 
       if @$input.attr('accept')
-        options.acceptFileTypes = new RegExp("^#{@$input.attr('accept').split(",").join("|")}$", "i")
+        @options.acceptFileTypes = options.acceptFileTypes = new RegExp("^#{@$input.attr('accept').split(",").join("|")}$", "i")
 
       @$input.fileupload(options)
 
     bindEventHandlers: ->
       @$input.bind 'fileuploadsend', (event, data) =>
+        aborted = false
+        data.files.forEach (file) =>
+          if @options.accept? && !@options.acceptFileTypes.test(file.type)
+            alert @config.invalidFormatMessage
+            aborted = true
+        if aborted
+          return
         @$input.addClass 'uploading'
         @$wrapper.addClass 'uploading' if @$wrapper?
         @$form.addClass  'uploading'
@@ -89,11 +97,12 @@
       @$input.bind 'fileuploaddone', (event, data) =>
         @addFile(data.result)
 
+      @$input.bind 'fileuploadfail', (event, data) =>
+        @failAlert(data)
 
       @$input.bind 'fileuploadstart', (event) =>
         # important! changed on every file upload
         @$input = $(event.target)
-
 
       @$input.bind 'fileuploadalways', (event) =>
         @$input.removeClass 'uploading'
@@ -106,7 +115,6 @@
             $input = $(input)
             $input.val  $input.data('old-val')
           @$submit.prop 'disabled', false
-
 
       @$input.bind 'fileuploadprogressall', (e, data) =>
         progress = parseInt(data.loaded / data.total * 100, 10)
@@ -122,6 +130,10 @@
         @$input.trigger 'attachinary:fileadded', [file]
       else
         alert @config.invalidFormatMessage
+
+    failAlert: (data) ->
+      alert @config.unknownErrorMessage
+
 
     removeFile: (fileIdToRemove) ->
       _files = []
@@ -146,8 +158,6 @@
 
     maximumReached: ->
       @options.maximum && @files.length >= @options.maximum
-
-
 
     addFilesContainer: ->
       if @options.files_container_selector? and $(@options.files_container_selector).length > 0

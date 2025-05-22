@@ -11,3 +11,8 @@ bin/
 
 .rspec
 config/cloudinary.yml
+
+.env
+
+.vscode/
+tmp
