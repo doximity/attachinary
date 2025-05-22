@@ -1,0 +1,11 @@
+# This file is not in use. This project does not use pipefitter
+# in circleci, but this was used to locally generate the .circelci/config.yml
+# in this directory
+ruby-versions: ["supported-versions"]
+run-matrix-separately: false
+test-job-name: "build"
+
+pre-test-commands:
+  - cd spec/dummy
+  - bundle install
+  - bundle exec rails db:migrate RAILS_ENV=test
