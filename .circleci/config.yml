@@ -443,7 +443,6 @@ workflows:
             - '3.3'
             - '3.4'
         name: run_tests_ruby-ruby-<< matrix.ruby-version >>
-        cache-dependencies: true
     - required_tests_pass:
         requires:
         - run_tests_ruby-ruby-3.2
