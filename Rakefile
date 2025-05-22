@@ -27,11 +27,13 @@ Bundler::GemHelper.install_tasks
 
 require "rspec/core/rake_task"
 
+FileList["lib/tasks/*.rake"].each { |task| load task }
+
 RSpec::Core::RakeTask.new(:spec)
 
 task :default do
   Dir.chdir("spec/dummy") do
-    sh "rails db:migrate"
+    sh "rails db:migrate RAILS_ENV=test"
   end
   Rake::Task[:spec].invoke
 end
