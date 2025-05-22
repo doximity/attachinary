@@ -13,8 +13,10 @@ Gem::Specification.new do |s|
   s.summary     = "attachinary-#{s.version}"
   s.description = "Attachments handler for Rails that uses Cloudinary for storage. Forked from attachinary."
 
-  s.files = Dir["{app,config,db,lib,vendor}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md"]
-  s.test_files = Dir["test/**/*"]
+  s.files = (Dir["{app,config,db,lib,vendor}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md", "CHANGELOG.md"]).select do |f|
+    !f.start_with?("vendor/cache")
+  end
+  s.test_files = Dir["spec/**/*"]
 
   s.add_dependency 'rails', '>= 7.0'
   s.add_dependency 'coffee-script'
