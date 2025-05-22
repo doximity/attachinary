@@ -560,7 +560,7 @@ workflows:
         parallelism: 1
         pre-actions:
         - browser-tools/install-chrome:
-            version: 136.0.7103.113
+            chrome-version: 136.0.7103.113
         - run: |
             cd spec/dummy
             bundle install
