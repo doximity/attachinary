@@ -5,13 +5,13 @@ require "attachinary/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
-  s.name        = "attachinary"
+  s.name        = "attachinary-dox"
   s.version     = Attachinary::VERSION
-  s.authors     = ["Milovan Zogovic"]
-  s.email       = ["milovan.zogovic@gmail.com"]
+  s.authors     = ["Milovan Zogovic", "Doximity Team"]
+  s.email       = ["engineering@doximity.com"]
   s.homepage    = ""
   s.summary     = "attachinary-#{s.version}"
-  s.description = "Attachments handler for Rails that uses Cloudinary for storage."
+  s.description = "Attachments handler for Rails that uses Cloudinary for storage. Forked from attachinary."
 
   s.files = Dir["{app,config,db,lib,vendor}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md"]
   s.test_files = Dir["test/**/*"]
