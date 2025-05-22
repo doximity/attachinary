@@ -8,7 +8,7 @@ Need lightweight attachment (photos and raw files) handler for any of your model
 
 Why is Attachinary different:
 
-* Supports both **ActiveRecord** and **Mongoid** ORMs!
+* Supports **ActiveRecord** 
 * **No need to alter your model schema** every time you introduce new kind of attachment.
 * Handles **both has\_one and has\_many** use cases.
 * **No need for ImageMagick** (or similar) - your thumbnails are generated on the fly by Cloudinary.
@@ -32,9 +32,9 @@ Add following line to your `Gemfile`:
 
 Specify which ORM you wish to use by adding following line to your `application.rb` file (or custom initializer):
 
-	require "attachinary/orm/YOUR_ORM" # active_record or mongoid
+	require "attachinary/orm/active_record"
 
-If you're using `ActiveRecord` ORM, then run following lines to generate required table:
+Run following lines to generate required table:
 
 	rake attachinary:install:migrations
 	rake db:migrate
@@ -48,7 +48,6 @@ It will generate '/attachinary/cors' which will be used for iframe file transfer
 Finally, make sure that you have following line in head section of your application layout file:
 
 	<%= cloudinary_js_config %>
-
 
 
 ## Usage
