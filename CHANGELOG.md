@@ -1,5 +1,7 @@
 = Version 1.3.1.pre
-  * TODO
+  * Remove support for Mongoid. Now only supports active_record.
+  * Remove $.attachinary.Templating - use another templating system or just use javascript.
+    See: https://github.com/doximity/attachinary/pull/66/files
 
 = Version 1.3.0
   * Added support for Rails 4 (thanks @rochers)
