@@ -415,37 +415,6 @@ jobs:
     - run:
         name: Required Tests are Passing
         command: echo "Required Tests are Passing"
-  build:
-    executor: ruby
-    steps:
-      - checkout
-      - run:
-          name: Install Bundler specific version
-          command: |
-            gem install bundler --version "${BUNDLE_VERSION}" --force
-      - restore_cache:
-          keys:
-            - v1-bundle-{{ checksum "Gemfile.lock" }}-
-      - run:
-          name: Install Ruby Dependencies
-          command: |
-            bundle config set --local path 'vendor/bundle'
-            bundle config set --local frozen 'true'
-            bundle install --local --jobs=4 --retry=3
-      - save_cache:
-          key: v1-bundle-{{ checksum "Gemfile.lock" }}-
-          paths:
-            - vendor/bundle
-      - run:
-          name: Run Tests
-          command: bundle exec rake ci:specs
-      - store_test_results:
-          name: Store test results
-          path: tmp/test-results
-      - persist_to_workspace:
-          root: .
-          paths:
-            - vendor/bundle
 
 workflows:
   main:
@@ -495,52 +464,39 @@ workflows:
         - run_tests_ruby-ruby-3.2
         - run_tests_ruby-ruby-3.3
         - run_tests_ruby-ruby-3.4
+    - gem/build:
+        <<: *pr_only
+        executor: ruby
+        name: gem-build
+        requires:
+          - required_tests_pass
+    - pre-release-approval:
+        <<: *pr_only
+        type: approval
+        requires:
+          - gem-build
+    - gem/publish:
+        <<: *pr_only
+        name: gem-publish
+        to_rubygems: true
+        pre_release: true
+        requires:
+          - pre-release-approval
+        context: artifact_publishing
 
   trunk:
     jobs:
-      - build:
-          <<: *master_only
       - gem/build:
           <<: *master_only
           executor: ruby
           name: gem-build
-          requires:
-            - build
-
-  pull-requests:
-    jobs:
-      - build:
-          <<: *pr_only
-      - gem/build:
-          <<: *pr_only
-          executor: ruby
-          name: gem-build
-          requires:
-            - build
-      - pre-release-approval:
-          <<: *pr_only
-          type: approval
-          requires:
-            - gem-build
-      - gem/publish:
-          <<: *pr_only
-          name: gem-publish
-          to_rubygems: true
-          pre_release: true
-          requires:
-            - pre-release-approval
-          context: artifact_publishing
 
   final-release:
     jobs:
-      - build:
-          <<: *version_tags_only
       - gem/build:
           <<: *version_tags_only
           executor: ruby
           name: gem-build
-          requires:
-            - build
       - gem/publish:
           <<: *version_tags_only
           name: gem-publish
