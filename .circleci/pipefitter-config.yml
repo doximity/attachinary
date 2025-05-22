@@ -5,9 +5,9 @@
 # Further modifications were performed after generating the config:
 # - removed references to aws-ssm
 # - added the `cloudinary` context so it can run integration tests against real cloudinary
-ruby-versions: ["3.3"]
-# run-matrix-separately: false
-# test-job-name: "build"
+ruby-versions: ["supported-versions"]
+
+cache-dependencies: true
 
 pre-test-commands:
   - |
