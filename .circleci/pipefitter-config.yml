@@ -1,7 +1,11 @@
 # This file is not in use. This project does not use pipefitter
 # in circleci, but this was used to locally generate the .circelci/config.yml
-# in this directory
-ruby-versions: ["supported-versions"]
+# in this directory.
+#
+# Further modifications were performed after generating the config:
+# - removed references to aws-ssm
+# - added the `cloudinary` context so it can run integration tests against real cloudinary
+ruby-versions: ["3.3"]
 run-matrix-separately: false
 test-job-name: "build"
 
