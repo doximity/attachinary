@@ -20,6 +20,7 @@ executors:
     - image: cimg/ruby:<< parameters.ruby-version >>
       environment:
         BUNDLE_VERSION: 2.6.8
+        RAILS_ENV: test
 
 commands:
   post_checkout_steps:
@@ -414,16 +415,14 @@ workflows:
           - cloudinary
         post-actions:
         - save_cache:
-            key: cov-cache-v1-{{ .Environment.CIRCLE_JOB }}-{{ .Branch }}-{{ .Revision
-              }}
+            key: cov-cache-v1-{{ .Environment.CIRCLE_JOB }}-{{ .Branch }}-{{ .Revision}}
             paths:
             - coverage
         - store_test_results:
             path: tmp/test-results
         - run:
             name: Prepare dox-deprecations output
-            command: mkdir -p tmp/deprecations && mv deprecations* tmp/deprecations/
-              || true
+            command: mkdir -p tmp/deprecations && mv deprecations* tmp/deprecations/ || true
         - store_artifacts:
             path: tmp/deprecations
         actions:
@@ -437,7 +436,7 @@ workflows:
         - browser-tools/install-chrome
         - run: cd spec/dummy
         - run: bundle install
-        - run: bundle exec rails db:migrate RAILS_ENV=test
+        - run: bundle exec rails db:drop db:create db:schema:load
         matrix:
           parameters:
             ruby-version:
