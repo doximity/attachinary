@@ -1,0 +1,9 @@
+# Lines starting with '#' are comments.
+# Each line is a file pattern followed by one or more owners.
+
+# These owners will be the default owners for everything in the repo.
+*                           @doximity/product_platform
+
+# Infra Automation
+/.circleci @doximity/infra_automation_reviewers @doximity/product_platform
+/.github/workflows @doximity/infra_automation_reviewers @doximity/product_platform
