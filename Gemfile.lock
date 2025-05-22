@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    attachinary (1.3.1)
+    attachinary-dox (1.3.1)
       cloudinary (>= 1.1, < 3.0)
       coffee-script
       mime-types
@@ -393,7 +393,7 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
-  attachinary!
+  attachinary-dox!
   capybara
   capybara-screenshot
   cloudinary
