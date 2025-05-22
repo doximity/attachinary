@@ -82,17 +82,14 @@ If you're using [SimpleForm](https://github.com/plataformatec/simple_form), you 
 Finally, you have to include necessary javascript files. In your `application.js`, add following lines:
 
 ```javascript
-//= require jquery.ui.widget
-//= require jquery.iframe-transport
-//= require jquery.fileupload
-//= require cloudinary/jquery.cloudinary
+//= require cloudinary/index
 //= require attachinary
 ```
 
 If you don't have the jQuery File Upload files, you can use following rake task to fetch (or update) them:
 
 ```
-rake attachinary:fetch_fileupload
+rake cloudinary:fetch_assets 
 ```
 
 And, add this code on document ready:
@@ -180,9 +177,9 @@ For example, I have a `user` model that has `photo` and `avatar` as attachments.
 
 ## Requirements and Compatibility
 
-* Cloudinary
-* Ruby 1.9
-* Rails 3.2+
+* [Cloudinary](https://github.com/cloudinary/cloudinary_gem)
+* Ruby 3
+* Rails 7+
 * jQuery
 
 
