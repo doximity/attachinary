@@ -6,6 +6,7 @@
 # - removed references to aws-ssm
 # - removed configs related to next-bundle and bundler checksums not relevant to this project
 # - added the `cloudinary` context so it can run integration tests against real cloudinary
+# - using a newer version of the circleci/browser-tools orb
 ruby-versions: ["supported-versions"]
 
 cache-dependencies: true

@@ -2,7 +2,7 @@ version: '2.1'
 
 orbs:
   ci-utils: doximity/ci-utils@2
-  browser-tools: circleci/browser-tools@1.4
+  browser-tools: circleci/browser-tools@1.5
 
 executors:
   base:
