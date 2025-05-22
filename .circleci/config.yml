@@ -558,9 +558,10 @@ workflows:
         parallelism: 1
         pre-actions:
         - browser-tools/install-chrome
-        - run: cd spec/dummy
-        - run: bundle install
-        - run: bundle exec rails db:migrate RAILS_ENV=test
+        - run: |
+            cd spec/dummy
+            bundle install
+            bundle exec rails db:migrate RAILS_ENV=test
         matrix:
           parameters:
             ruby-version:

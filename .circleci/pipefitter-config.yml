@@ -6,6 +6,7 @@ run-matrix-separately: false
 test-job-name: "build"
 
 pre-test-commands:
-  - cd spec/dummy
-  - bundle install
-  - bundle exec rails db:migrate RAILS_ENV=test
+  - |
+    cd spec/dummy
+    bundle install
+    bundle exec rails db:migrate RAILS_ENV=test
