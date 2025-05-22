@@ -1,15 +1,20 @@
 version: '2.1'
 
+parameters:
+  pipeline-params:
+    type: string
+    default: "{}"
+    description: required by circle
+
 orbs:
   ci-utils: doximity/ci-utils@2
-  browser-tools: circleci/browser-tools@1.5
+  browser-tools: circleci/browser-tools@1.4
 
 executors:
   base:
     resource_class: small
     docker:
     - image: cimg/base:current-22.04
-
   ruby:
     parameters:
       ruby-version:
@@ -25,7 +30,6 @@ commands:
   post_checkout_steps:
     steps:
     - run: echo "Post Checkout Steps Hook"
-
   bundle_install:
     parameters:
       cache-dependencies:
@@ -41,70 +45,191 @@ commands:
           If you're only using a single Ruby version, it's recommended to leave it blank.
         type: string
         default: default
+      use-next-bundle:
+        description: 'Given a dual-boot configuration, do we want to install the `_NEXT`
+          version of the bundle to test new dependency versions?
+
+          '
+        type: boolean
+        default: false
       ruby-version:
         description: 'The version of ruby being used. This is used as part of the
           cache key if cache-dependencies is true.
 
           '
         type: string
-        default: ''
+        default: '3.2'
+      has-lockfile:
+        description: 'Whether or not the project has a Gemfile.lock.
+
+          '
+        type: boolean
+        default: true
+      has-lockfile-checksums:
+        description: 'Whether or not the project has CHECKSUMS in Gemfile.lock.
+
+          '
+        type: boolean
+        default: false
+      blank-checksum-script:
+        description: 'The ruby script to run to check for blank checksums in Gemfile.lock.
+
+          '
+        type: string
+        default: "\n          require \"fileutils\"\n          require \"bundler/gem_helper\"\n
+          \         lockfile = File.read(ENV.fetch(\"LOCKFILE\"))\n          git_deps
+          = lockfile.split(\"GEM\").first.split(\"GIT\").reject { _1.empty? }.map
+          do |dep|\n            dep.match(/specs:\\n\\s+(.+) \\(.+\\)/)[1]\n          end\n
+          \         path_deps = lockfile.split(\"GEM\").first.split(\"PATH\").reject
+          { _1.empty? }.map do |dep|\n            dep.match(/specs:\\n\\s+(.+) \\(.+\\)/)[1]\n
+          \         end\n          checksums = lockfile.split(\"CHECKSUMS\").last\n
+          \         blanks = checksums.scan(/^  [a-zA-Z_-]+ \\(.+\\)$/).flatten\n
+          \         blanks = blanks.reject { _1.match?(/#{Bundler::GemHelper.new.gemspec.name.to_s}/)
+          }\n          blanks = blanks.reject { git_deps.include?(_1.split(\" \").first)
+          }\n          blanks = blanks.reject { path_deps.include?(_1.split(\" \").first)
+          }\n          FileUtils.mkdir_p(\"tmp\")\n          File.open(\"tmp/checksum_blanks.log\",
+          \"w\") { _1.write(blanks.join(\"\\n\")) } unless blanks.empty?\n        "
     steps:
     - run:
         name: Install Bundler specific version
         command: gem install bundler --version "$BUNDLE_VERSION" --force
+    - when:
+        condition: "<< parameters.use-next-bundle >>"
+        steps:
+        - run:
+            name: Set DOX_NEXT to true in BASH_ENV
+            command: 'echo "export DOX_NEXT=true" >> $BASH_ENV
 
+              '
+        - install_bundle:
+            cache-dependencies: "<< parameters.cache-dependencies >>"
+            cache-salt: "<< parameters.cache-salt >>"
+            ruby-version: "<< parameters.ruby-version >>"
+            cache-path: vendor/cache-next
+            bundle-path: vendor/bundle-next
+            lockfile: Gemfile_next.lock
+            gemfile: Gemfile_next
+            has-lockfile: "<< parameters.has-lockfile >>"
+            has-lockfile-checksums: "<< parameters.has-lockfile-checksums >>"
+            blank-checksum-script: "<< parameters.blank-checksum-script >>"
+    - unless:
+        condition: "<< parameters.use-next-bundle >>"
+        steps:
+        - install_bundle:
+            cache-dependencies: "<< parameters.cache-dependencies >>"
+            cache-salt: "<< parameters.cache-salt >>"
+            ruby-version: "<< parameters.ruby-version >>"
+            has-lockfile: "<< parameters.has-lockfile >>"
+            has-lockfile-checksums: "<< parameters.has-lockfile-checksums >>"
+            blank-checksum-script: "<< parameters.blank-checksum-script >>"
+  install_bundle:
+    parameters:
+      cache-dependencies:
+        type: boolean
+        default: false
+      cache-salt:
+        type: string
+        default: default
+      ruby-version:
+        type: string
+        default: '3.2'
+      cache-path:
+        type: string
+        default: vendor/cache
+      bundle-path:
+        type: string
+        default: vendor/bundle
+      lockfile:
+        type: string
+        default: Gemfile.lock
+      gemfile:
+        type: string
+        default: Gemfile
+      has-lockfile:
+        type: boolean
+        default: true
+      has-lockfile-checksums:
+        type: boolean
+        default: false
+      blank-checksum-script:
+        type: string
+        default: ''
+    steps:
     - when:
         condition: "<< parameters.cache-dependencies >>"
         steps:
         - restore_cache:
             keys:
-            - << parameters.cache-salt >>-v2-Gemfile-ruby<< parameters.ruby-version >>-{{ checksum "Gemfile.lock" }}
-            - << parameters.cache-salt >>-v2-Gemfile-ruby<< parameters.ruby-version >>
-
+            - << parameters.cache-salt >>-v2-<< parameters.gemfile >>-ruby<< parameters.ruby-version
+              >>-{{ checksum "<< parameters.lockfile >>" }}
+            - "<< parameters.cache-salt >>-v2-<< parameters.gemfile >>-ruby<< parameters.ruby-version
+              >>"
     - run:
         name: Configure Bundler
         command: |
-          bundle config set --local cache_path 'vendor/cache'
-          bundle config set --local path 'vendor/bundle'
-          bundle config set --local gemfile 'Gemfile'
+          bundle config set --local cache_path '<< parameters.cache-path >>'
+          bundle config set --local path '<< parameters.bundle-path >>'
+          bundle config set --local gemfile '<< parameters.gemfile >>'
           bundle config set --local jobs 4
           bundle config set --local retry 3
           bundle config set --local timeout 60
-
     - run:
         name: Log bundle config
         command: bundle config
-
     - run:
         name: Install Ruby Dependencies
         command: |
-          if [ -d vendor/cache ]; then
+          if [ -d "<< parameters.cache-path >>" ]; then
             bundle install --local --verbose
           else
             bundle install --verbose
           fi
+    - when:
+        condition: "<< parameters.has-lockfile >>"
+        steps:
+        - run:
+            name: Did you run bundle install after changing Gemfile?
+            command: |
+              lockfile_diff=$(git diff << parameters.lockfile >>)
+              if [ -n "$lockfile_diff" ]; then
+                echo "<< parameters.lockfile >> is out of date:"
+                printf "$lockfile_diff\n\n"
+                echo "Please run 'bundle install' locally and commit the updated << parameters.lockfile >>."
+                if [ "<< parameters.has-lockfile-checksums >>" = "true" ]; then
+                  echo "Please also run 'bundle lock --add-checksums' locally and commit the updated << parameters.lockfile >>."
+                fi
+                exit 1
+              else
+                echo "<< parameters.lockfile >> is up to date."
+              fi
+        - when:
+            condition: "<< parameters.has-lockfile-checksums >>"
+            steps:
+            - run:
+                name: Does << parameters.lockfile >> have blank checksums?
+                environment:
+                  LOCKFILE: "<< parameters.lockfile >>"
+                command: |
+                  ruby -e '''
+                  << parameters.blank-checksum-script >>
+                  '''
 
-    - run:
-        name: Did you run bundle install after changing Gemfile?
-        command: |
-          lockfile_diff=$(git diff Gemfile.lock)
-          if [ -n "$lockfile_diff" ]; then
-            echo "Gemfile.lock is out of date:"
-            printf "$lockfile_diff\n\n"
-            echo "Please run 'bundle install' locally and commit the updated Gemfile.lock."
-            exit 1
-          else
-            echo "Gemfile.lock is up to date."
-          fi
-
+                  if [ -f "tmp/checksum_blanks.log" ]; then
+                    echo "$LOCKFILE has blank checksums:"
+                    cat tmp/checksum_blanks.log
+                    printf "\n\nPlease run 'bundle lock --add-checksums' locally and commit the updated $LOCKFILE."
+                    exit 1
+                  else
+                    echo "No blank checksums found in $LOCKFILE."
+                  fi
     - when:
         condition: "<< parameters.cache-dependencies >>"
         steps:
         - save_cache:
-            key: << parameters.cache-salt >>-v2-Gemfile-ruby<< parameters.ruby-version >>-{{ checksum "Gemfile.lock" }}
+            key: << parameters.cache-salt >>-v2-<< parameters.gemfile >>-ruby<< parameters.ruby-version
+              >>-{{ checksum "<< parameters.lockfile >>" }}
             paths:
-            - vendor/bundle
-
+            - "<< parameters.bundle-path >>"
   run_rspec_tests:
     parameters:
       test_pattern:
@@ -414,14 +539,16 @@ workflows:
           - cloudinary
         post-actions:
         - save_cache:
-            key: cov-cache-v1-{{ .Environment.CIRCLE_JOB }}-{{ .Branch }}-{{ .Revision}}
+            key: cov-cache-v1-{{ .Environment.CIRCLE_JOB }}-{{ .Branch }}-{{ .Revision
+              }}
             paths:
             - coverage
         - store_test_results:
             path: tmp/test-results
         - run:
             name: Prepare dox-deprecations output
-            command: mkdir -p tmp/deprecations && mv deprecations* tmp/deprecations/ || true
+            command: mkdir -p tmp/deprecations && mv deprecations* tmp/deprecations/
+              || true
         - store_artifacts:
             path: tmp/deprecations
         actions:
@@ -441,7 +568,7 @@ workflows:
           parameters:
             ruby-version:
             - '3.3'
-        name: build-ruby-<< matrix.ruby-version >>
+        name: run_tests_ruby-ruby-<< matrix.ruby-version >>
     - required_tests_pass:
         requires:
-        - build-ruby-3.3
+        - run_tests_ruby-ruby-3.3

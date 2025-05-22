@@ -6,8 +6,8 @@
 # - removed references to aws-ssm
 # - added the `cloudinary` context so it can run integration tests against real cloudinary
 ruby-versions: ["3.3"]
-run-matrix-separately: false
-test-job-name: "build"
+# run-matrix-separately: false
+# test-job-name: "build"
 
 pre-test-commands:
   - |
