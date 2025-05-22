@@ -4,6 +4,7 @@
 #
 # Further modifications were performed after generating the config:
 # - removed references to aws-ssm
+# - removed configs related to next-bundle and bundler checksums not relevant to this project
 # - added the `cloudinary` context so it can run integration tests against real cloudinary
 ruby-versions: ["supported-versions"]
 
