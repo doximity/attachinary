@@ -1,5 +1,4 @@
 (($) ->
-
   $.attachinary =
     index: 0
     config:
@@ -7,26 +6,22 @@
       indicateProgress: true
       invalidFormatMessage: 'Invalid file format'
       unknownErrorMessage: 'Error uploading file'
-      template: """
-        <ul>
-          <% for(var i=0; i<files.length; i++){ %>
-            <li>
-              <% if(files[i].resource_type == "raw") { %>
-                <div class="raw-file"></div>
-              <% } else if (files[i].format == "mp3") { %>
-                <audio src="<%= $.cloudinary.url(files[i].public_id, { "version": files[i].version, "resource_type": 'video', "format": 'mp3'}) %>" controls />
-              <% } else { %>
-                <img
-                  src="<%= $.cloudinary.url(files[i].public_id, { "version": files[i].version, "format": 'jpg', "crop": 'fill', "width": 75, "height": 75 }) %>"
-                  alt="" width="75" height="75" />
-              <% } %>
-              <a href="#" data-remove="<%= files[i].public_id %>">Remove</a>
-            </li>
-          <% } %>
-        </ul>
-      """
       render: (files) ->
-        $.attachinary.Templating.template(@template, files: files)
+        str = "<ul>"
+        files.forEach (file) ->
+          str += "<li>"
+          if file.resource_type == "raw"
+            str += '<div class="raw-file"></div>'
+          else if file.format == "mp3"
+            src = $.cloudinary.url(file.public_id, { "version": file.version, "resource_type": 'video', "format": 'mp3'})
+            str += '<audio src="' + src + '" controls />'
+          else
+            src = $.cloudinary.url(file.public_id, { "version": file.version, "format": 'jpg', "crop": 'fill', "width": 75, "height": 75 })
+            str += '<img src="'+ src + '" alt="" width="75" height="75" />'
+          str += '<a href="#" data-remove="' + file.public_id + '">Remove</a>'
+          str += "</li>"
+        str += "</ul>"
+        return str
 
 
   $.fn.attachinary = (options) ->
@@ -187,36 +182,4 @@
       $input.attr 'name', @options.field_name
       $input.val value
       $input
-
-
-
-
-  # JavaScript templating by John Resig's
-  $.attachinary.Templating =
-    settings:
-      start:        '<%'
-      end:          '%>'
-      interpolate:  /<%=(.+?)%>/g
-
-    escapeRegExp: (string) ->
-      string.replace(/([.*+?^${}()|[\]\/\\])/g, '\\$1')
-
-    template: (str, data) ->
-      c = @settings
-      endMatch = new RegExp("'(?=[^"+c.end.substr(0, 1)+"]*"+@escapeRegExp(c.end)+")","g")
-      fn = new Function 'obj',
-        'var p=[],print=function(){p.push.apply(p,arguments);};' +
-        'with(obj||{}){p.push(\'' +
-        str.replace(/\r/g, '\\r')
-           .replace(/\n/g, '\\n')
-           .replace(/\t/g, '\\t')
-           .replace(endMatch,"✄")
-           .split("'").join("\\'")
-           .split("✄").join("'")
-           .replace(c.interpolate, "',$1,'")
-           .split(c.start).join("');")
-           .split(c.end).join("p.push('") +
-           "');}return p.join('');"
-      if data then fn(data) else fn
-
 )(jQuery)
