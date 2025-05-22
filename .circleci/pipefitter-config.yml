@@ -4,10 +4,12 @@
 #
 # Further modifications were performed after generating the config:
 # - removed references to aws-ssm
+# - removed configs related to next-bundle and bundler checksums not relevant to this project
 # - added the `cloudinary` context so it can run integration tests against real cloudinary
-ruby-versions: ["3.3"]
-run-matrix-separately: false
-test-job-name: "build"
+# - using a newer version of the circleci/browser-tools orb
+ruby-versions: ["supported-versions"]
+
+cache-dependencies: true
 
 pre-test-commands:
   - |
