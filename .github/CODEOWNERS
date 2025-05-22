@@ -5,5 +5,5 @@
 *                           @doximity/mofo_product_platform
 
 # Infra Automation
-/.circleci @doximity/infra_automation_reviewers @doximity/mofo_product_platform
-/.github/workflows @doximity/infra_automation_reviewers @doximity/mofo_product_platform
+/.circleci @doximity/product_platform_automation @doximity/mofo_product_platform
+/.github/workflows @doximity/product_platform_automation @doximity/mofo_product_platform
