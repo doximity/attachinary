@@ -103,7 +103,7 @@ $('.attachinary-input').attachinary()
 
 Attachinary jquery plugin is based upon [jQuery File Upload plugin](https://github.com/blueimp/jQuery-File-Upload) but without any fancy UI (it leaves it up to you to decorate it).
 
-Plugin is fully customizable. It uses John Resig's micro templating in the background, but you can override it with whatever you like. Check out the source code for more configuration options you can set.
+Plugin is fully customizable. Check out the source code for more configuration options you can set.
 
 
 ### Displaying avatar and photos
