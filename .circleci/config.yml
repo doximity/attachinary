@@ -48,7 +48,7 @@ commands:
 
           '
         type: string
-        default: '3.2'
+        default: ''
     steps:
     - run:
         name: Install Bundler specific version
