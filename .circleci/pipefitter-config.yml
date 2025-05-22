@@ -8,4 +8,4 @@ cache-dependencies: true
 pre-test-commands:
   - cd spec/dummy
   - bundle install
-  - bundle exec rails db:migrate RAILS_ENV=test
+  - RAILS_ENV=test bundle exec rails db:create db:migrate

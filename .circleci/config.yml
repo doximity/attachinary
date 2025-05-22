@@ -2,7 +2,7 @@ version: '2.1'
 
 orbs:
   ci-utils: doximity/ci-utils@2
-  browser-tools: circleci/browser-tools@1.4
+  browser-tools: circleci/browser-tools@1.5
 
 executors:
   base:
@@ -433,10 +433,11 @@ workflows:
               circleci tests split --split-by=timings)
         parallelism: 1
         pre-actions:
-        - browser-tools/install-chrome
+        - browser-tools/install:
+            browser: chrome
         - run: cd spec/dummy
         - run: bundle install
-        - run: bundle exec rails db:drop db:create db:schema:load
+        - run: RAILS_ENV=test bundle exec rails db:create db:migrate
         matrix:
           parameters:
             ruby-version:
