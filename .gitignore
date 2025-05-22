@@ -13,3 +13,6 @@ bin/
 config/cloudinary.yml
 
 .env
+
+.vscode/
+tmp

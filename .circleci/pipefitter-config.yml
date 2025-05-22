@@ -2,8 +2,8 @@
 # in circleci, but this was used to locally generate the .circelci/config.yml
 # in this directory
 ruby-versions: ["supported-versions"]
-run-matrix-separately: false
-test-job-name: "build"
+
+cache-dependencies: true
 
 pre-test-commands:
   - cd spec/dummy
