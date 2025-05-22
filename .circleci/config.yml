@@ -436,7 +436,7 @@ workflows:
         - browser-tools/install-chrome
         - run: cd spec/dummy
         - run: bundle install
-        - run: RAILS_ENV=test bundle exec rails db:create db:migrate
+        - run: RAILS_ENV=test bundle exec rails db:drop db:create db:migrate
         matrix:
           parameters:
             ruby-version:
