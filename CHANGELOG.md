@@ -1,4 +1,5 @@
-= UNRELEASED
+= Version 2.0.0
+  * Renamed fork to `attachinary-dox`
   * Remove support for Mongoid. Now only supports active_record.
   * Remove $.attachinary.Templating - use another templating system or just use javascript.
     See: https://github.com/doximity/attachinary/pull/66/files
