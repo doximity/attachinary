@@ -9,9 +9,12 @@ Gem::Specification.new do |s|
   s.version     = Attachinary::VERSION
   s.authors     = ["Milovan Zogovic", "Doximity Team"]
   s.email       = ["engineering@doximity.com"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/doximity/attachinary"
   s.summary     = "attachinary-#{s.version}"
   s.description = "Attachments handler for Rails that uses Cloudinary for storage. Forked from attachinary."
+  s.licenses    = ["MIT"]
+
+  s. required_ruby_version = ">= 3.0"
 
   s.files = (Dir["{app,config,db,lib,vendor}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md", "CHANGELOG.md"]).select do |f|
     !f.start_with?("vendor/cache", "vendor/bundle")
