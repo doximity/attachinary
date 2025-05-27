@@ -1,3 +1,3 @@
 module Attachinary
-  VERSION = "1.3.1.pre3"
+  VERSION = "1.3.1"
 end

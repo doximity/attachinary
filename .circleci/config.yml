@@ -1,29 +1,8 @@
 version: '2.1'
 
-# yaml anchor filters
-master_only: &master_only
-  filters:
-    branches:
-      only: master
-    tags:
-      ignore: /.*/
-pr_only: &pr_only
-  filters:
-    branches:
-      ignore: master
-    tags:
-      ignore: /.*/
-version_tags_only: &version_tags_only
-  filters:
-    branches:
-      ignore: /.*/
-    tags:
-      only: /^v.*/
-
 orbs:
   ci-utils: doximity/ci-utils@2
   browser-tools: circleci/browser-tools@1.5
-  gem: doximity/gem-publisher@0
 
 executors:
   base:
@@ -464,45 +443,3 @@ workflows:
         - run_tests_ruby-ruby-3.2
         - run_tests_ruby-ruby-3.3
         - run_tests_ruby-ruby-3.4
-    - gem/build:
-        <<: *pr_only
-        executor: ruby
-        name: gem-build
-        requires:
-          - required_tests_pass
-    - pre-release-approval:
-        <<: *pr_only
-        type: approval
-        requires:
-          - gem-build
-    - gem/publish:
-        <<: *pr_only
-        name: gem-publish
-        to_rubygems: true
-        pre_release: true
-        requires:
-          - pre-release-approval
-        context: artifact_publishing
-
-  trunk:
-    jobs:
-      - gem/build:
-          <<: *master_only
-          executor: ruby
-          name: gem-build
-
-  final-release:
-    jobs:
-      - gem/build:
-          <<: *version_tags_only
-          executor: ruby
-          name: gem-build
-      - gem/publish:
-          <<: *version_tags_only
-          name: gem-publish
-          to_rubygems: true
-          pre_release: false
-          requires:
-            - gem-build
-          context: artifact_publishing
-
