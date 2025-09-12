@@ -1,3 +1,6 @@
+= Version 2.0.2
+ * Republish of 2.0.1
+
 = Version 2.0.1
  * [update engine to combine initializers](https://github.com/doximity/attachinary/pull/69)
 
