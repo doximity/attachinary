@@ -1,3 +1,6 @@
+= Version 2.0.1
+ * [update engine to combine initializers](https://github.com/doximity/attachinary/pull/69)
+
 = Version 2.0.0
   * Renamed fork to `attachinary-dox`
   * Remove support for Mongoid. Now only supports active_record.
