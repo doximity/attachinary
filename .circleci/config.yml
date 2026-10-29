@@ -18,7 +18,7 @@ executors:
     docker:
     - image: cimg/ruby:<< parameters.ruby-version >>
       environment:
-        BUNDLE_VERSION: 2.6.8
+        BUNDLE_VERSION: 4.0.23
 
 commands:
   post_checkout_steps:
@@ -433,13 +433,13 @@ workflows:
         matrix:
           parameters:
             ruby-version:
-            - '3.2'
             - '3.3'
             - '3.4'
+            - '4.0'
         name: run_tests_ruby-ruby-<< matrix.ruby-version >>
         cache-dependencies: true
     - required_tests_pass:
         requires:
-        - run_tests_ruby-ruby-3.2
         - run_tests_ruby-ruby-3.3
         - run_tests_ruby-ruby-3.4
+        - run_tests_ruby-ruby-4.0
